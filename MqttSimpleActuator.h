@@ -40,7 +40,8 @@ int otaUpdate(const char*, const char*, bool);
 void mqttConfig(void);
 int mqttConnect(void);
 int mqttInit(void);
-int mqttProcess(bool, unsigned int, const char*);
+int mqttProcess(bool, unsigned int);
+int mqttProcess(const char*);
 void mqttLoop(void);
 
 #endif /* __MQTT_SIMPLE_ACTUATOR__ */

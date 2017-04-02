@@ -156,7 +156,7 @@ int mqttInit(void)
   return(0);
 }
 
-int mqttProcess(bool stat, unsigned int batt, const char *firmware)
+int mqttProcess(bool stat, unsigned int batt)
 {
   char         stat_str[8]      = {0};
   char         batt_str[8]      = {0};
@@ -184,10 +184,6 @@ int mqttProcess(bool stat, unsigned int batt, const char *firmware)
   mqtt_client.publish(mqtt_device_topics[Root],    "online", false);
   mqtt_client.publish(mqtt_device_topics[Status],  stat_str, true);
   mqtt_client.publish(mqtt_device_topics[Battery], batt_str, true);
-  if(firmware != NULL)
-  {
-    mqtt_client.publish(mqtt_device_topics[Firmware], firmware, true);
-  }
   Debugln("Data published successfully.");
   
   /* Subscribe to topic */
@@ -197,6 +193,34 @@ int mqttProcess(bool stat, unsigned int batt, const char *firmware)
   /* Let's the MQTT client processes messages */
   mqtt_client.loop();
   return(0);
+}
+
+int mqttProcess(const char *firmware)
+{
+  /**
+   * Ensure connection to MQTT broker is establish
+   */
+  if(!mqtt_client.connected())
+  {
+    if(mqttConnect() != 0)
+    {
+      return(-1);
+    }
+  }
+
+  /**
+   * Publish and Subscribe
+   */
+  if(firmware != NULL)
+  {
+    mqtt_client.publish(mqtt_device_topics[Firmware], firmware, true);
+    Debugln("Data published successfully.");
+    
+    /* Let's the MQTT client processes messages */
+    mqtt_client.loop();
+    return(0);
+  }
+  return(-1);
 }
 
 void mqttLoop(void)

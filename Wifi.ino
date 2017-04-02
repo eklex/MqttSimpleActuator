@@ -28,7 +28,7 @@ int wifiConnect()
     return(-1);
   }
   
-  WiFi.setAutoReconnect(true)  
+  WiFi.setAutoReconnect(true);
   
   Debug("WiFi connection established to "); Debugln(wifi_ssid);
   Debug("IP address is "); Debugln(WiFi.localIP());

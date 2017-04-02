@@ -11,7 +11,7 @@ ADC_MODE(ADC_VCC);
  */
 /* Firmware version 
  * Note: Need to be updated to reflect release number */
-const char* firmware_version = "mqtt-simple-actuator-rel0.7";
+const char* firmware_version = "mqtt-simple-actuator-rel0.9";
 /* Deep sleep period */
 const unsigned long sleep_period_sec = 60;
 /* Actuator pin output */
@@ -101,7 +101,8 @@ void setup()
    * Process MQTT topics
    */
   Debugln("\n---> Process MQTT topics");
-  mqttProcess(actuator_status, ESP.getVcc(), firmware_version);
+  mqttProcess(firmware_version);
+  mqttProcess(actuator_status, ESP.getVcc());
   
 #if 0
   /**
@@ -132,7 +133,7 @@ void loop()
     Debug("\n --> Actuator output changed to "); Debugln(actuator_trigger);
     digitalWrite(actuator_pin, actuator_trigger);
     actuator_status = actuator_trigger;
-    mqttProcess(actuator_status, ESP.getVcc(), NULL);
+    mqttProcess(actuator_status, ESP.getVcc());
   }
 
   /**
@@ -141,7 +142,7 @@ void loop()
   if(millis() - last_connection > mqtt_reconnect_sec*1000)
   {
     last_connection = millis();
-    mqttProcess(actuator_status, ESP.getVcc(), NULL);
+    mqttProcess(actuator_status, ESP.getVcc());
   }
 
   if((millis() - last_ota_check > ota_check_sec*1000) &&
